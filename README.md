@@ -37,7 +37,7 @@ library("ReCAST")
 
 ## Usage
 
-#### **1. Load scRNA-seq data**
+### **1. Load scRNA-seq data**
 As an example, we use the melanoma (`MEL`) dataset to illustrate the steps 
 required to reproduce the drug repurposing pipeline and the findings presented 
 in the ReCAST article.
@@ -58,7 +58,7 @@ disease <- "MEL"
 data(SC_obj)
 ```
 
-##### **1.1. Single-cell processing, alignment and annotation** 
+#### **1.1. Single-cell processing, alignment and annotation** 
 **Note**: The example dataset (`SC_obj`) has undergone quality control (QC), 
 but still needs to be processed, aligned and annotated before proceeding to the 
 next steps. If you already have a processed and annotated dataset, you can skip 
@@ -81,7 +81,7 @@ SC_obj <- JoinLayers(SC_obj)
 
 ```
 
-#### **2. Perform differential gene expression analysis across cell types**
+### **2. Perform differential gene expression analysis across cell types**
 For each cell type, this step performs differential expression (DE) analysis using 
 the Seurat Wilcoxon test to identify marker genes. The DE results are stored in a list.
 
@@ -111,7 +111,7 @@ deg_genes <- get_de_genes(SC_obj     = SC_obj,
 
 ```
 
-#### **3. Load drug signatures from L1000 CMap**  
+### **3. Load drug signatures from L1000 CMap**  
 Drug perturbation signatures are downloaded from the Connectivity Map (CMap) L1000 
 perturbational profiles GSE70138 and GSE92742 available in GEO. These signatures 
 are then used to generate context-specific drug references with the 
@@ -146,7 +146,7 @@ all_drugs <- unique(drug_ref_profiles$drug_info$cmap_name)
 write.csv(all_drugs, file.path(out_path, "all_drugs_skin.csv"))
 ```
 
-##### **3.1. Filter drugs having at least k instances** 
+#### **3.1. Filter drugs having at least k instances** 
 **Note**: We selected drugs with at least 2 instances to ensure reliable drug-level 
 statistics and reduce sensitivity to single measurements, but the minimum number of 
 instances can be customized.
@@ -164,7 +164,7 @@ drug_ref_profiles$drug_expr_matrix <- drug_ref_profiles$drug_expr_matrix[
 keep_drugs <- intersect(gsub("_.*","",drug_ref_profiles$drug_info$cmap_name), FDA_drugs) 
 ```
 
-##### **3.2. Prepare drug target PPIs and drug-target MoAs**
+#### **3.2. Prepare drug target PPIs and drug-target MoAs**
 To generate the `drug_targets_moa` object, containing the mechanisms of action
 associated with drug targets downloaded from [DrugBank](https://go.drugbank.com/releases),
 the data are processed using an XML parser and data extraction procedures described 
@@ -187,7 +187,7 @@ drug_targets_ppi <- drug_targets_ppi[tolower(drug_targets_ppi$drug_name) %in% ke
 drug_targets_moa <- drug_targets_moa[tolower(drug_targets_moa$drug_name) %in% keep_drugs, ]
 ```
 
-#### **4. Compute drug statistics** 
+### **4. Compute drug statistics** 
 For each cell type, this step computes drug statistics (p-value and FDR) using 
 gene expression signature matching and the Kolmogorov-Smirnov test (adapted 
 from the [`Asgard`](https://github.com/lanagarmire/Asgard) approach).
@@ -212,7 +212,7 @@ drug_stats <- ReCAST::compute_drug_statistics(cluster_degs      = deg_genes,
                                               cores             = 1)
 ```
 
-#### **5. Compute drug action weight** 
+### **5. Compute drug action weight** 
 This step builds the Drug2Cell (D2C) matrix using the R implementation designed 
 by [`scDrugLink`](https://github.com/LHBCB/scDrugLink), following the Python 
 implementation developed by the Teichmann Lab (https://github.com/Teichlab/drug2cell).
@@ -246,7 +246,7 @@ drug_action_weight <- ReCAST::compute_drug_action(SC_obj                 = SC_ob
 
 ```
 
-#### **6. Compute final drug score** 
+### **6. Compute final drug score** 
 The overall drug score is computed by summing the weighted contributions of each 
 cell type, which combine drug statistics and drug action weights (as described in 
 the ReCAST article), resulting in a ranking of repurposed drugs.
@@ -254,25 +254,25 @@ the ReCAST article), resulting in a ranking of repurposed drugs.
 ```r
 cell_metadata <- SC_obj@meta.data
 
-drug_score <- ReCAST::compute_drug_score(cell_metadata          = cell_metadata,
-                                         annotation             = annotation,
-                                         case                   = case,
-                                         cluster_degs           = deg_genes,
-                                         sig_data_paths         = sig_paths,
-                                         score_drugs            = drug_stats,
-                                         action_weights         = drug_action_weight,
-                                         contexts               = tissue,
-                                         context_type           = "tissue",
-                                         clusters               = NULL,
-                                         concordance            = concordance,
-                                         drug_type              = drug_type,
-                                         imp_genes              = imp_genes,
-                                         imp_genes_thr          = 0.1,
-                                         cores                  = 1,
-                                         out_path               = out_path)
+drug_score <- ReCAST::compute_drug_score(cell_metadata  = cell_metadata,
+                                         annotation     = annotation,
+                                         case           = case,
+                                         cluster_degs   = deg_genes,
+                                         sig_data_paths = sig_paths,
+                                         score_drugs    = drug_stats,
+                                         action_weights = drug_action_weight,
+                                         contexts       = tissue,
+                                         context_type   = "tissue",
+                                         clusters       = NULL,
+                                         concordance    = concordance,
+                                         drug_type      = drug_type,
+                                         imp_genes      = imp_genes,
+                                         imp_genes_thr  = 0.1,
+                                         cores          = 1,
+                                         out_path       = out_path)
 ```
 
-##### **6.1. Evaluate results**
+#### **6.1. Evaluate results**
 To evaluate the results in terms of AUC and AUPRC, the set of positive drugs for 
 the corresponding disease is loaded from the `positive_drugs` object provided in 
 the `ReCAST` package.
@@ -285,10 +285,10 @@ positive_drugs <- rownames(positive_drugs[positive_drugs$MEL == 1, ])
 evaluate(drug_score_df = drug_score, positive_drugs = positive_drugs)
 ```
 
-### Citation
+## Citation
 
 
-### Acknowledgement
+## Acknowledgement
 ReCAST is derived from the [Asgard](https://github.com/lanagarmire/Asgard) and [scDrugLink](https://github.com/LHBCB/scDrugLink) packages.
 We thank their authors for making these tools available. See the `LICENSE` file for the applicable license terms.
 
