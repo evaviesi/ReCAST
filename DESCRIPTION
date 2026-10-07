@@ -1,0 +1,28 @@
+Package: ReCAST
+Type: Package
+Title: Repurposing of drugs via a Cell cluster- and Action-aware Scoring Tool
+Version: 0.0.1
+Authors@R: c(
+    person(
+      "Andrea", "Betti",
+      email = "andrea.betti@univr.it",
+      role = "aut"
+    ),
+    person(
+      "Eva", "Viesi",
+      email = "eva.viesi@univr.it",
+      role = c("aut", "cre")
+    )
+  )
+Description: ReCAST prioritizes drugs across cell populations and by individual cell type accounting for protein-protein interactions and drug mechanisms of action.
+Imports: 
+    Seurat (>= 5.3.0),
+    effsize (>= 0.8.1), 
+    cmapR (>= 1.18.0)
+License: file LICENSE
+Encoding: UTF-8
+LazyData: true
+LazyDataCompression: xz
+Depends: 
+    R (>= 3.5)
+Config/roxygen2/version: 8.1.0
