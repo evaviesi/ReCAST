@@ -1,4 +1,4 @@
-# ReCAST
+# ReCAST: Repurposing of drugs via a Cell cluster- and Action-aware Scoring Tool
 
 ReCAST prioritizes drugs across cell populations and by individual cell type 
 accounting for protein-protein interactions (PPIs) and drug mechanisms of action (MoAs).
