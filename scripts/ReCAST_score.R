@@ -142,22 +142,22 @@ drug_action_weight <- ReCAST::compute_drug_action(SC_obj                 = SC_ob
 
 cell_metadata <- SC_obj@meta.data
 
-drug_score <- ReCAST::compute_drug_score(cell_metadata          = cell_metadata,
-                                         annotation             = annotation,
-                                         case                   = case,
-                                         cluster_degs           = deg_genes,
-                                         sig_data_paths         = sig_paths,
-                                         score_drugs            = drug_stats,
-                                         action_weights         = drug_action_weight,
-                                         contexts               = tissue,
-                                         context_type           = "tissue",
-                                         clusters               = NULL,
-                                         concordance            = concordance,
-                                         drug_type              = drug_type,
-                                         imp_genes              = imp_genes,
-                                         imp_genes_thr          = 0.1,
-                                         cores                  = 1,
-                                         out_path               = out_path)
+drug_score <- ReCAST::compute_drug_score(cell_metadata  = cell_metadata,
+                                         annotation     = annotation,
+                                         case           = case,
+                                         cluster_degs   = deg_genes,
+                                         sig_data_paths = sig_paths,
+                                         score_drugs    = drug_stats,
+                                         action_weights = drug_action_weight,
+                                         contexts       = tissue,
+                                         context_type   = "tissue",
+                                         clusters       = NULL,
+                                         concordance    = concordance,
+                                         drug_type      = drug_type,
+                                         imp_genes      = imp_genes,
+                                         imp_genes_thr  = 0.1,
+                                         cores          = 1,
+                                         out_path       = out_path)
 
 
 # Evaluate results -------------------------------------------------------------
